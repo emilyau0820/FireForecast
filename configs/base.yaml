@@ -1,0 +1,66 @@
+# ─── Paths ───────────────────────────────────────────────────────────────────
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  train_file: "next_day_wildfire_spread_train_*.tfrecord"   # Kaggle dataset files
+  val_file:   "next_day_wildfire_spread_eval_*.tfrecord"
+  test_file:  "next_day_wildfire_spread_test_*.tfrecord"
+
+# ─── Feature channels in the dataset (order matters!) ────────────────────────
+features:
+  # These are the 12 input feature names from the Next Day Wildfire Spread dataset
+  input_features:
+    - "elevation"        # Terrain elevation (SRTM)
+    - "th"               # Wind direction (degrees)
+    - "vs"               # Wind speed (m/s)
+    - "tmmn"             # Min temperature (K)
+    - "tmmx"             # Max temperature (K)
+    - "sph"              # Specific humidity (kg/kg)
+    - "pr"               # Precipitation (mm)
+    - "pdsi"             # Palmer Drought Severity Index
+    - "NDVI"             # Vegetation index (MODIS)
+    - "erc"              # Energy Release Component (fire danger)
+    - "population"       # Population density
+    - "PrevFireMask"     # Fire mask at time t (the input fire state)
+  label_feature: "FireMask"   # Fire mask at time t+1 (what we predict)
+
+# ─── Model ────────────────────────────────────────────────────────────────────
+model:
+  encoder: "resnet18"          # Lightweight ResNet18 encoder backbone
+  encoder_weights: "imagenet"  # Pretrained ImageNet weights for warm start
+  in_channels: 12              # Must match number of input_features above
+  out_channels: 1              # Single channel: spread probability per pixel
+
+# ─── Training ─────────────────────────────────────────────────────────────────
+training:
+  epochs: 40
+  batch_size: 32
+  learning_rate: 3.0e-3
+  weight_decay: 1.0e-5
+  pos_weight: 10.0             # Upweight positive (fire) pixels due to class imbalance
+  focal_gamma: 2.0             # Focal loss gamma — focus on hard examples
+  random_crop_size: 32         # Crop 32x32 from 64x64 for training (per benchmark paper)
+  seed: 42
+  device: "cuda"               # Change to "cpu" if no GPU available
+
+# ─── Logging ──────────────────────────────────────────────────────────────────
+logging:
+  project: "wildfire-spread"
+  entity: emilyau0820-                 # Your W&B username (fill in)
+  save_dir: "checkpoints/"
+
+# ─── Evaluation ───────────────────────────────────────────────────────────────
+eval:
+  checkpoint: "checkpoints/best_model.pth"
+  output_dir: "outputs/"
+  threshold: 0.5               # Probability threshold for binary fire/no-fire
+
+# ─── Geographic placement (used by visualize_3d.py) ───────────────────────────
+# The dataset patches carry no real coordinates; these values place the 3D map
+# overlay at an approximate location in fire-prone central California.
+# Override per-run with --lat / --lon on the CLI, or set true values here if
+# you have patch-level metadata from your data source.
+geo:
+  lat_center: 37.5             # Patch centre latitude  (decimal degrees N)
+  lon_center: -119.5           # Patch centre longitude (decimal degrees W)
+  meters_per_pixel: 375.0      # VIIRS nominal resolution (~375 m/px)

@@ -1,0 +1,54 @@
+# ── Data ──────────────────────────────────────────────────────────────────────
+# Raw TFRecords (~3.8 GB) and MTBS zip (~362 MB): re-download per DEVELOPER_GUIDE
+data/raw/
+# Processed NumPy arrays (~3.8 GB): re-generate with preprocess.py
+data/processed/
+# Keep the directory structure so git doesn't drop data/ entirely
+!data/.gitkeep
+
+# ── Model checkpoints ─────────────────────────────────────────────────────────
+# Weights are distributed via GitHub Releases (see DEVELOPER_GUIDE)
+checkpoints/*.pth
+checkpoints/*.pt
+# Keep the directory
+!checkpoints/.gitkeep
+
+# ── Generated outputs ─────────────────────────────────────────────────────────
+outputs/
+!outputs/.gitkeep
+
+# ── Experiment tracking ───────────────────────────────────────────────────────
+wandb/
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── IDE / OS ──────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Claude Code session files ─────────────────────────────────────────────────
+.claude/
+
+# ── Secrets / credentials ────────────────────────────────────────────────────
+.env
+*.env
+kaggle.json
+credentials.json
