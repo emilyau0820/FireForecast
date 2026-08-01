@@ -1,8 +1,8 @@
-# Wildfire Predictor
+# FireForecast
+
+**Developed by [Emily Au](https://github.com/emilyau0820)**
 
 Next-day wildfire spread prediction using a U-Net trained on the [Next Day Wildfire Spread](https://www.kaggle.com/datasets/fantineh/next-day-wildfire-spread) dataset (Huot et al. 2022). Given 12 environmental input channels over a 64×64 geographic patch (~24×24 km at 375 m/pixel), the model outputs a 32×32 fire probability map for the following day.
-
-**Status:** Work in progress — model trained, interactive Streamlit app running.
 
 ---
 
@@ -33,8 +33,8 @@ Evaluated on the 1,689-sample test set. AUPRC is the primary metric given ~1% fi
 
 ```powershell
 # 1. Clone
-git clone https://github.com/<your-username>/wildfire-predictor.git
-cd wildfire-predictor
+git clone https://github.com/emilyau0820/FireForecast.git
+cd FireForecast
 
 # 2. Install dependencies
 python -m pip install -r requirements.txt
@@ -72,12 +72,12 @@ The Streamlit app (`app.py`) has two tabs:
 - Ground-truth next-day fire mask overlaid as cyan dots
 - Metrics row (max fire prob, predicted/actual burn %, mean elevation)
 - 12-channel feature summary table with risk interpretation labels
-- Date range filter to scrub through fire seasons
 
 **Sample Map** — overview of all 1,689 test samples:
-- Dots coloured by max predicted fire probability, spread across real western-US fire locations
+- Dots coloured by max predicted fire probability, spread across real western-US fire locations (MTBS-approximate)
+- Date range slider to filter samples by fire season
 - Click any dot to select it; the Prediction View updates to show that sample
-- Quick Risk Summary card (ERC, Wind Speed, PDSI, Max Fire Prob) appears without switching tabs
+- Quick Risk Summary card (Max Fire Prob, ERC, Wind Speed, PDSI) visible without switching tabs
 
 ---
 
@@ -88,14 +88,14 @@ The Streamlit app (`app.py`) has two tabs:
 - **Size:** 18,545 samples (14,979 train / 1,877 val / 1,689 test), ~3.8 GB raw
 - **Channels:** Elevation (SRTM), wind/temp/humidity/precip/ERC/PDSI (GRIDMET), NDVI (MODIS), population (GPWv4), fire mask (VIIRS)
 
-The dataset is static and will not receive new samples. See [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) for the live-data roadmap.
+The dataset is static. See [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) for the live-data roadmap (automated ingestion, incremental retraining, live predictions).
 
 ---
 
 ## Project Structure
 
 ```
-wildfire-predictor/
+FireForecast/
 ├── app.py                   # Streamlit web app
 ├── visualize_3d.py          # Standalone 3D Plotly CLI
 ├── preprocess.py            # TFRecord → NumPy pipeline

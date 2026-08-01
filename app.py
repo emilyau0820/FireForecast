@@ -27,7 +27,7 @@ from visualize_3d import FIRE_COLORSCALE, build_figure, make_latlon_grid  # noqa
 
 st.set_page_config(
     layout="wide",
-    page_title="Wildfire Predictor",
+    page_title="FireForecast",
     page_icon="fire",
 )
 
@@ -164,8 +164,8 @@ def _sample_coords(idx: int) -> tuple[float, float]:
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 
 with st.sidebar:
-    st.title("Wildfire Predictor")
-    st.caption("Next-day fire spread prediction via U-Net")
+    st.title("FireForecast")
+    st.caption("Predicting next-day wildfire spread using a U-Net — developed by [@emilyau0820](https://github.com/emilyau0820)")
     st.divider()
 
     # key="selected_idx" binds the slider to st.session_state.selected_idx.
